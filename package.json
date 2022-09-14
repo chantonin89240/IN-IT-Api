@@ -1,0 +1,42 @@
+{
+  "name": "in-it_manage_node-.nosync",
+  "version": "1.0.0",
+  "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "test": "vitest run --coverage",
+    "lint": "eslint . --fix --quiet",
+    "format": "prettier . --write",
+    "typecheck": "tsc --noEmit",
+    "test:dev": "vitest",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://2024-D2-P1-E1@dev.azure.com/2024-D2-P1-E1/IN-IT%20Manage/_git/IN-IT_Manage_Node"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.3",
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.7.18",
+    "@typescript-eslint/eslint-plugin": "^5.37.0",
+    "@typescript-eslint/parser": "^5.37.0",
+    "concurrently": "^7.4.0",
+    "eslint": "^8.23.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.19",
+    "prettier": "2.7.1",
+    "typescript": "^4.8.3",
+    "vitest": "^0.23.2"
+  }
+}
