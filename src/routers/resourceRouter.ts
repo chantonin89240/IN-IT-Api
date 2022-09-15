@@ -1,9 +1,9 @@
 import express from 'express';
-import {getResource, getResources} from "../services/resourceService";
+import ResourceService from "../services/resourceService";
 
 
 export const resourceRouter = express.Router();
 
-resourceRouter.get("/", getResources);
+resourceRouter.get("/", ResourceService.getResources);
 
-resourceRouter.get("/:id", (id : number) => getResource);
+resourceRouter.get("/:id", (id : number) => ResourceService.getResource);

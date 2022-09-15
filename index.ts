@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import {resourceRouter} from "./src/routers/resourceRouter"
 
@@ -7,12 +7,8 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT;
 
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('c + TypeScript Server');
-});
-
-app.get('/resource', resourceRouter);
+app.use(express.json());
+app.use('/resource', resourceRouter);
 
 
 app.listen(port, () => {
