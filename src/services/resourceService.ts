@@ -4,12 +4,12 @@ import tedious, {Connection, Request} from 'tedious';
 
 
 let resources = new Array<Resource>(
-  { id : 1, name : "Salle de réunion 1", description : "Cette salle est très grande et spacieuse"},
-  { id : 2, name : "Salle de réunion 2", description : "Cette salle est très grande et spacieuse"},
-  { id : 3, name : "Salle de réunion 3", description : "Cette salle est très grande et spacieuse"},
-  { id : 4, name : "Salle de réunion 4", description : "Cette salle est très grande et spacieuse"},
-  { id : 5, name : "Salle de réunion 5", description : "Cette salle est très grande et spacieuse"},
-  { id : 6, name : "Salle de réunion 6", description : "Cette salle est très grande et spacieuse"}
+  { id : 1, name : "Salle de réunion 1", description : "Cette salle est très grande et spacieuse", image : "https://image.jimcdn.com/app/cms/image/transf/dimension=940x10000:format=jpg/path/s398965e309713775/image/ia5d911c472440089/version/1478270869/image.jpg", adress : "18 Boulevard de Verdun", type : "MeetingRoom", capacity : 1},
+  { id : 2, name : "Salle de réunion 2", description : "Cette salle est très grande et spacieuse", image : "https://image.jimcdn.com/app/cms/image/transf/dimension=940x10000:format=jpg/path/s398965e309713775/image/ia5d911c472440089/version/1478270869/image.jpg", adress : "18 Boulevard de Verdun", type : "MeetingRoom", capacity : 1},
+  { id : 3, name : "Salle de réunion 3", description : "Cette salle est très grande et spacieuse", image : "https://image.jimcdn.com/app/cms/image/transf/dimension=940x10000:format=jpg/path/s398965e309713775/image/ia5d911c472440089/version/1478270869/image.jpg", adress : "18 Boulevard de Verdun", type : "MeetingRoom", capacity : 5},
+  { id : 4, name : "Salle de réunion 4", description : "Cette salle est très grande et spacieuse", image : "https://image.jimcdn.com/app/cms/image/transf/dimension=940x10000:format=jpg/path/s398965e309713775/image/ia5d911c472440089/version/1478270869/image.jpg", adress : "18 Boulevard de Verdun", type : "MeetingRoom", capacity : 2},
+  { id : 5, name : "Salle de réunion 5", description : "Cette salle est très grande et spacieuse", image : "https://www.createur-entreprise.net/wp-content/uploads/2021/04/salle-reunion.png", adress : "18 Boulevard de Verdun", type : "MeetingRoom", capacity : 1},
+  { id : 6, name : "Salle de réunion 6", description : "Cette salle est très grande et spacieuse", image : "https://image.jimcdn.com/app/cms/image/transf/dimension=940x10000:format=jpg/path/s398965e309713775/image/ia5d911c472440089/version/1478270869/image.jpg", adress : "18 Boulevard de Verdun", type : "MeetingRoom", capacity : 7}
 );
 
 export default class ResourceService{
