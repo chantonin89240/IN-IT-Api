@@ -6,4 +6,6 @@ export const resourceRouter = express.Router();
 
 resourceRouter.get("/", ResourceService.getResources);
 
+resourceRouter.post("/", ResourceService.createResource);
+
 resourceRouter.get("/:id", (id : number) => ResourceService.getResource);
