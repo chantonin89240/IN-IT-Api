@@ -1,4 +1,4 @@
 export default interface participation {
-    workerOd : number,
+    workerId : number,
     bookingId: number,
 }
