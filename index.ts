@@ -1,5 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import { getResourcesHandler } from "./src/route/";
+
 var Connection = require('tedious').Connection;
 
 dotenv.config();
@@ -7,39 +9,38 @@ dotenv.config();
 const app: Express = express();
 
 // connexion bdd serveur 
+// var config = {
+//   "server": "192.168.10.3", // or "localhost"
+//   "authentication": {
+//     "type": "default",
+//     "options": { 
+//       "port": 1433, 
+//       "userName": "sa",
+//       "password": "Diiageg1@sql",
+//     }
+//   },
+//   "options": {
+//     "database": "INITDatabase", // or
+//     "trustServerCertificate": true
+//   }
+// };
+
+// localhost
 var config = {
-  "server": "192.168.10.3", // or "localhost"
-  "authentication": {
-    "type": "default",
-    "options": { 
-      "port": 1433, 
-      "userName": "sa",
-      "password": "Diiageg1@sql",
+  server: 'localhost', 
+  authentication: {
+    type: 'default',
+    options: {  
+      userName: 'DESKTOP-EE3VA5C\\antonin',
+      password: '',
     }
   },
-  "options": {
-    "database": "INITDatabase", // or
-    "trustServerCertificate": true
+  options: {
+    database: 'INITDatabase',
+    trustServerCertificate: true
   }
 };
 
-// localhost
-/*var config = {
-  "server": "localhost", // or "localhost"
-  "authentication": {
-    "type": "default",
-    "options": { 
-      "port": 1433, 
-      "userName": "",
-      "password": "",
-    }
-  },
-  "options": {
-    "database": "INITDatabase", // or
-    "trustServerCertificate": true
-  }
-};
-*/
 
 var connection = new Connection(config);
 
@@ -58,10 +59,9 @@ connection.on('connect', function(err: any) {
 connection.connect();
 
 
-
-app.get('/resources', (req: Request, res: Response) => {
-  res.send('c + TypeScript Server');
-});
+app.get("", (req: Request, res: Response) => res.send());
+app.get("/resources", getResourcesHandler);
+//app.get("/resource/:id", getResourceHandler)
 
 // app.listen(port, () => {
 //   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
