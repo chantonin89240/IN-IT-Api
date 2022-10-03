@@ -21,7 +21,7 @@ connexion.on('connect', function(err: any) {
 export default class ResourceService{
     static getResources(request : Request, response : Response) {
         const promise = new Promise((resolve, reject) => {
-            const request : typeof RequestTedious = new RequestTedious("SELECT Id, Name, Description FROM Resource", (err : any, rowCount : number) => {
+            const request : typeof RequestTedious = new RequestTedious("SELECT Id, Name, Description, Picture, TypeId, MaxCapacity, Position  FROM Resource", (err : any, rowCount : number) => {
               if (err) {
                 console.log(err)
                 reject(err)
@@ -34,7 +34,11 @@ export default class ResourceService{
               resources.push({
                 id : columns[0].value,
                 name : columns[1].value,
-                description : columns[2].value
+                description : columns[2].value,
+                picture : columns[3].value,
+                typeId : columns[4].value,
+                maxCapacity : columns[5].value,
+                position : columns[6].value,
               })
             })
             request.on("requestCompleted", () => {
