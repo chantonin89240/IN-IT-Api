@@ -1,4 +1,4 @@
-import Type from "../../domain/model/TypeModel";
+import Option from "../../domain/model/OptionModel";
 import type { Response, Request } from "express";
 import {connection} from "../../database/database";
 
@@ -18,10 +18,10 @@ connexion.on('connect', function(err: any) {
 });
 
 
-export default class TypeService{
-    static getTypes(request : Request, response : Response) {
+export default class OptionService{
+    static getOptions(request : Request, response : Response) {
         const promise = new Promise((resolve, reject) => {
-            const request : typeof RequestTedious = new RequestTedious("SELECT Id, Name FROM Type", (err : any, rowCount : number) => {
+            const request : typeof RequestTedious = new RequestTedious("SELECT Id, Name FROM [Option]", (err : any, rowCount : number) => {
               if (err) {
                 console.log(err)
                 reject(err)
@@ -29,15 +29,15 @@ export default class TypeService{
                 console.log(rowCount + "rows")
               }
             })
-            const types : Array<Type> = new Array<Type>
+            const options : Array<Option> = new Array<Option>
             request.on("row", (columns:any) => {
-              types.push({
+              options.push({
                 id : columns[0].value,
                 name : columns[1].value
               })
             })
             request.on("requestCompleted", () => {
-              resolve(types)
+              resolve(options)
             })
             connexion.execSql(request)
           })
