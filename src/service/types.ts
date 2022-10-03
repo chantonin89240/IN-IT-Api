@@ -1,4 +1,4 @@
-export interface Response<T> {
+export interface ResponseEntities<T> {
     status: string;
     body: T;
 }
