@@ -1,4 +1,4 @@
-export default interface participation {
+export default interface Participation {
     workerId : number,
     bookingId: number,
 }
