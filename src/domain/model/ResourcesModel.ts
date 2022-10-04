@@ -1,7 +1,4 @@
-import Option from './OptionModel';
-import Booking from './BookingModel';
-
-export default interface Resource {
+export default interface Resources {
     id : number;
     name: string;
     description: string;
@@ -10,6 +7,4 @@ export default interface Resource {
     position: string;
     typeId: number;
     typeName : string;
-    options : Option[];
-    Booking : Booking[],
 }

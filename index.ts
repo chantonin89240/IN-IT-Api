@@ -14,7 +14,7 @@ app.get("", (req: Request, res: Response) => res.send());
 app.use("/resources", resourceRouter);
 app.use("/types", typeRouter)
 app.use("/options", optionRouter)
-//app.get("/resource/:id", getResourceHandler)
+app.use("/resource/:id", resourceRouter)
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

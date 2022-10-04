@@ -1,4 +1,4 @@
-export default interface Type {
+export default interface Option {
     id : number,
     name: string,
 }

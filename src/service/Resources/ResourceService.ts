@@ -1,4 +1,6 @@
-import {Resource} from "../../domain/model/ResourceModel";
+import Resources from "../../domain/model/ResourcesModel";
+import Resource from "../../domain/model/ResourceModel";
+import Option from "../../domain/model/OptionModel";
 import type { Response, Request } from "express";
 import {connection} from "../../database/database";
 
@@ -29,7 +31,7 @@ export default class ResourceService{
                 console.log(rowCount + "rows")
               }
             })
-            const resources : Array<Resource> = new Array<Resource>
+            const resources : Array<Resources> = new Array<Resources>
             request.on("row", (columns:any) => {
               resources.push({
                 id : columns[0].value,
@@ -55,5 +57,77 @@ export default class ResourceService{
 
       static createResource(request : Request, response : Response){
 
+      }
+
+      static getResource(request : Request, response : Response) {
+        const promise = new Promise((resolve, reject) => {
+            const requestResource : typeof RequestTedious = new RequestTedious("select [Resource].Name, [Resource].Description, [Resource].Picture, [Resource].MaxCapacity, [Resource].Position, [Type].Name from [Resource] inner join [Type] on [Type].Id = [Resource].TypeId where [Resource].Id = 110", (err : any, rowCount : number) => {
+              if (err) {
+                console.log(err)
+                reject(err)
+              } else {
+                console.log(rowCount + "rows")
+              }
+            })
+            const requestOption : typeof RequestTedious = new RequestTedious("select [Option].Id, [Option].Name, [ResourceOption].Quantity from [Option] inner join [ResourceOption] on [ResourceOption].OptionId = [Option].Id where [ResourceOption].ResourceId = 110", (err : any, rowCount : number) => {
+              if (err) {
+                console.log(err)
+                reject(err)
+              } else {
+                console.log(rowCount + "rows")
+              }
+            })
+            const requestBooking : typeof RequestTedious = new RequestTedious("select [Booking].Id, [Booking].[Start], [Booking].[End], [Booking].Capacity, [Worker].Id as WorkerId, [Worker].Mail ,[Worker].Firstname, [Worker].Lastname from [Booking] inner join Participate inner join Worker on [Worker].Id = [Participate].WorkerId on [Participate].BookingId = [Booking].Id where [Booking].ResourceId  = 110", (err : any, rowCount : number) => {
+              if (err) {
+                console.log(err)
+                reject(err)
+              } else {
+                console.log(rowCount + "rows")
+              }
+            })
+
+
+            const option : Array<Option> = new Array<Option>
+
+            requestOption.on("row", (columns:any) => {
+              option.push({
+                id : columns[0].value,
+                name : columns[1].value, 
+              })
+            })
+
+            
+
+            const resources : Array<Resource> = new Array<Resource>
+
+            requestResource.on("row", (columns:any) => {
+              resources.push({
+                id : columns[0].value,
+                name : columns[1].value,
+                description : columns[2].value,
+                picture : columns[3].value,
+                maxCapacity : columns[4].value,
+                position : columns[5].value,
+                typeId : columns[6].value,
+                typeName : columns[7].value,
+                options : option,
+                booking : 
+                })
+              })
+            })
+            requestResource.on("requestCompleted", () => {
+              resolve(resources)
+            })
+            connexion.execSql(requestResource)
+          })
+          request.on("requestCompleted", () => {
+            resolve(types)
+          })
+          connexion.execSql(request)
+        })
+        promise.then(
+          (result) => {
+              response.status(200).send(result)
+          })
       }
 }
