@@ -53,7 +53,42 @@ export default class ResourceService{
             })
       }
 
-      static createResource(request : Request, response : Response){
-
+      static createResource(req : Request, response : Response)
+      {
+        console.log(req.body);
+        
+        const promise = new Promise((resolve, reject) => {
+          var requestString  = "insert into Resource (Name, Description, Picture, TypeId, MaxCapacity, Position) values ('" + req.body.name + "', '"+ req.body.description +"', '" + req.body.picture + "', " + req.body.typeId + ", " + req.body.maxCapacity +", '" + req.body.position + "');";
+          console.log(requestString);
+          const request : typeof RequestTedious = new RequestTedious(requestString, (err : any, rowCount : number) => {
+            if (err) {
+              console.log(err)
+              reject(err)
+            } else {
+              console.log(rowCount + "rows")
+            }
+          })
+          const resources : Array<Resource> = new Array<Resource>
+          request.on("row", (columns:any) => {
+            resources.push({
+              id : columns[0].value,
+              name : columns[1].value,
+              description : columns[2].value,
+              picture : columns[3].value,
+              maxCapacity : columns[4].value,
+              position : columns[5].value,
+              typeId : columns[6].value,
+              typeName : columns[7].value,
+            })
+          })
+          request.on("requestCompleted", () => {
+            resolve(resources)
+          })
+          connexion.execSql(request)
+        })
+        promise.then(
+          (result) => {
+              response.status(200).send(result)
+          })
       }
 }

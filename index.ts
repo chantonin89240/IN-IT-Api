@@ -7,13 +7,14 @@ import {optionRouter} from "./src/route/Option/OptionRouter"
 dotenv.config();
 
 const app: Express = express();
+app.use(express.json());
 
 const port = 3000;
 
 app.get("", (req: Request, res: Response) => res.send());
-app.use("/resources", resourceRouter);
-app.use("/types", typeRouter)
-app.use("/options", optionRouter)
+app.use("/resource", resourceRouter);
+app.use("/type", typeRouter)
+app.use("/option", optionRouter)
 //app.get("/resource/:id", getResourceHandler)
 
 app.listen(port, () => {
