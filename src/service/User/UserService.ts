@@ -54,8 +54,9 @@ export default class UserService{
 
     static Verify(req: Request, res: Response, next:NextFunction) {
 
-        if('token' in req.body){
-            var validity = false
+        var bearerHeader = req.headers["authorization"]
+        if(bearerHeader != undefined){
+            const token = bearerHeader.split(' ')[1]
             let payload =  webToken.verify(req.body.token,secretKey,{maxAge: "12h"}) as webToken.JwtPayload
             if(payload != null){
                 console.log(payload)
@@ -71,7 +72,7 @@ export default class UserService{
                             console.log(rowCount + "rows")
                         }
                     })
-                    request.on("row", (columns) => {
+                    request.on("row", (columns) => {    //ID is in fact in Db ==>
                         resolve(claimedId)
                         return
                     })
