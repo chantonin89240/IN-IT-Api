@@ -1,6 +1,7 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, Request, Response, urlencoded } from 'express';
 import dotenv from 'dotenv';
 import {resourceRouter} from "./src/route/Resouces/ResourceRouter";
+import UserService from "./src/service/User/UserService"
 
 dotenv.config();
 
@@ -8,7 +9,17 @@ const app: Express = express();
 
 const port = 3000;
 
-app.get("", (req: Request, res: Response) => res.send());
+
+app.use(express.json())
+app.use(urlencoded({extended:true}))
+app.get("", (req: Request, res: Response) => res.send({message : "In-It API is responsive!"}))
+  
+  // Security functions. Comment and uncomment as needed for testing. 
+  // Remember to uncomment and test routes. Tokens last 12 hours.
+app.post("/login", (req, res) => UserService.Authenticate(req, res))
+app.use((req, res, next) => UserService.Verify(req, res, next))
+
+  // Data acquirement routes go here. These will be secure.
 app.use("/resources", resourceRouter);
 //app.get("/resource/:id", getResourceHandler)
 
