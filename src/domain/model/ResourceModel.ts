@@ -3,7 +3,8 @@ export interface Resource {
     name: string;
     description: string;
     picture: string; 
-    typeId: number;
     maxCapacity: number;
     position: string;
+    typeId: number;
+    typeName : string;
 }

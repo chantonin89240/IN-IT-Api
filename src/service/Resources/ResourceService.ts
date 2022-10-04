@@ -21,7 +21,7 @@ connexion.on('connect', function(err: any) {
 export default class ResourceService{
     static getResources(request : Request, response : Response) {
         const promise = new Promise((resolve, reject) => {
-            const request : typeof RequestTedious = new RequestTedious("SELECT Id, Name, Description, Picture, TypeId, MaxCapacity, Position  FROM Resource", (err : any, rowCount : number) => {
+            const request : typeof RequestTedious = new RequestTedious("SELECT [Resource].Id, [Resource].Name, Description, Picture, MaxCapacity, Position, [Type].Id AS TypeId, [Type].Name AS TypeName FROM Resource INNER JOIN Type ON Type.Id = Resource.TypeId", (err : any, rowCount : number) => {
               if (err) {
                 console.log(err)
                 reject(err)
@@ -36,9 +36,10 @@ export default class ResourceService{
                 name : columns[1].value,
                 description : columns[2].value,
                 picture : columns[3].value,
-                typeId : columns[4].value,
-                maxCapacity : columns[5].value,
-                position : columns[6].value,
+                maxCapacity : columns[4].value,
+                position : columns[5].value,
+                typeId : columns[6].value,
+                typeName : columns[7].value,
               })
             })
             request.on("requestCompleted", () => {
@@ -50,5 +51,9 @@ export default class ResourceService{
             (result) => {
                 response.status(200).send(result)
             })
-        }
-    }
+      }
+
+      static createResource(request : Request, response : Response){
+
+      }
+}
