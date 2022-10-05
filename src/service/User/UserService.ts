@@ -57,7 +57,7 @@ export default class UserService{
         var bearerHeader = req.headers["authorization"]
         if(bearerHeader != undefined){
             const token = bearerHeader.split(' ')[1]
-            let payload =  webToken.verify(req.body.token,secretKey,{maxAge: "12h"}) as webToken.JwtPayload
+            let payload =  webToken.verify(token,secretKey,{maxAge: "12h"}) as webToken.JwtPayload
             if(payload != null){
                 console.log(payload)
                 var claimedId : number = payload.value
