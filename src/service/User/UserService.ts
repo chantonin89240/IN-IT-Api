@@ -16,12 +16,16 @@ export default class UserService{
         var pass : string = request.body.password
         //Reminder: Password has to be encrypted clientside... Serverside encryption is optional (though recommended).
 
-        // if(CheckSafety(name) && CheckSafety(pass)){
-        //     response.status(401).send("Login failed (regex)")  //Prevent SQL injection
-        // }
-        // else{
+        if(CheckIsInjecting(name) || CheckIsInjecting(pass)){
+            response.status(401).send("Login failed (regex // Injecting)")  //Prevent SQL injection
+        }
+        else{
             const promise = new Promise((resolve, reject) => {
-                var dbRequest : string = "SELECT [Id] FROM [INITDatabase].[dbo].[User] WHERE [User].[Mail] = '"+name+"' AND [User].[Password] = '"+pass+"'"
+                var dbRequest : string =  "SELECT [User].Id, [User].FirstName, [User].LastName, UT.Name "
+                    dbRequest         +=  "FROM [INITDatabase].[dbo].[User] "
+                    dbRequest         +=  "JOIN [UserType] as UT "
+                    dbRequest         +=  "ON UT.Id = [User].UserTypeId "
+                    dbRequest         +=  "WHERE [User].[Mail] = '"+name+"' AND [User].[Password] = '"+pass+"'"
                 console.log(dbRequest)
                 const request : RequestTedious = new RequestTedious(dbRequest, (err : any, rowCount : number) => {
                     if (err) {
@@ -32,9 +36,18 @@ export default class UserService{
                     }
                 })
                 
-                var result = ""
+                var result : object = {}
                 request.on("row", (columns) => {
-                    result = webToken.sign(columns[0],secretKey,{expiresIn:"12h"})
+                    result = {
+                        token : webToken.sign(columns[0],secretKey,{expiresIn:"12h"}),
+                        userData : {
+                            firstName : columns[1].value,
+                            lastName : columns[2].value,
+                            isAdmin : columns[3].value == "Administrateur"
+                        }
+                    }
+
+
                     resolve(result)
                     return
                 })
@@ -44,12 +57,12 @@ export default class UserService{
             promise.then(
                 result => {
                     if(result != "")
-                        response.status(200).send({message: "Succesfully logged in.",token : result})
+                        response.status(200).send({message: "Succesfully logged in.",data : result})
                     else
                         response.status(401).send({message: "Login failed(not in db or bad arguments)"})
                 }
             )
-        //}
+        }
     }
 
     static Verify(req: Request, res: Response, next:NextFunction) {
@@ -60,7 +73,10 @@ export default class UserService{
             let payload =  webToken.verify(token,secretKey,{maxAge: "12h"}) as webToken.JwtPayload
             if(payload != null){
                 console.log(payload)
-                var claimedId : number = payload.value
+                var claimedId : string = payload.value
+                if(CheckIsInjecting(claimedId)){
+                    res.status(401).send({message: "Please log in. (bad token)"})
+                }
                 const promise = new Promise((resolve, reject) => {
                     var dbRequest : string = "SELECT [Id] FROM [INITDatabase].[dbo].[User] WHERE [User].Id = '"+claimedId+"'"
                     console.log(dbRequest)
@@ -101,7 +117,9 @@ export default class UserService{
 }
 
 
-const regex : RegExp = RegExp("([A-Z]|[a-z]|[0-9]|@|.|\-|_)+")
-function CheckSafety(i : string){
-    return regex.exec(i) != null
+const regex : RegExp = /'/              //Checks for attempts to break out of "This is a raw value" declarators for SQL.
+function CheckIsInjecting(i : string){
+    var result = regex.test(i)
+    console.log("Run regex on : "+i+"  // Returned "+result)
+    return result
 }
