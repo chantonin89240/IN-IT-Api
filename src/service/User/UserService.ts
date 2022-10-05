@@ -16,10 +16,10 @@ export default class UserService{
         var pass : string = request.body.password
         //Reminder: Password has to be encrypted clientside... Serverside encryption is optional (though recommended).
 
-        // if(CheckSafety(name) && CheckSafety(pass)){
-        //     response.status(401).send("Login failed (regex)")  //Prevent SQL injection
-        // }
-        // else{
+        if(CheckSafety(name) && CheckSafety(pass)){
+            response.status(401).send("Login failed (regex)")  //Prevent SQL injection
+        }
+        else{
             const promise = new Promise((resolve, reject) => {
                 var dbRequest : string = "SELECT [Id] FROM [INITDatabase].[dbo].[User] WHERE [User].[Mail] = '"+name+"' AND [User].[Password] = '"+pass+"'"
                 console.log(dbRequest)
@@ -49,7 +49,7 @@ export default class UserService{
                         response.status(401).send({message: "Login failed(not in db or bad arguments)"})
                 }
             )
-        //}
+        }
     }
 
     static Verify(req: Request, res: Response, next:NextFunction) {
@@ -101,7 +101,9 @@ export default class UserService{
 }
 
 
-const regex : RegExp = RegExp("([A-Z]|[a-z]|[0-9]|@|.|\-|_)+")
+const regex : RegExp = /'/              //Checks for attempts to break out of "This is a raw value" declarators for SQL.
 function CheckSafety(i : string){
-    return regex.exec(i) != null
+    var result = regex.test(i)
+    console.log("Run regex on : "+i+"  // Returned "+result)
+    return result
 }
