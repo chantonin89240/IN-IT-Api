@@ -73,7 +73,7 @@ export default class ResourceService{
               console.log(rowCount + "rows")
             }
           })
-          const resources : Array<Resource> = new Array<Resource>
+          const resources : Array<Resources> = new Array<Resources>
           request.on("row", (columns:any) => {
             resources.push({
               id : columns[0].value,

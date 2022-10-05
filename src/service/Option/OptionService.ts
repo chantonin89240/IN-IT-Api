@@ -17,8 +17,8 @@ connexion.on('connect', function(err: any) {
   }
 });
 
-
 export default class OptionService{
+  // service qui récupère les options
     static getOptions(request : Request, response : Response) {
         const promise = new Promise((resolve, reject) => {
             const request : typeof RequestTedious = new RequestTedious("select [Option].Id, [Option].Name, [resourceOption].Quantity from [Option] inner join ResourceOption on [resourceOption].OptionId = [Option].Id", (err : any, rowCount : number) => {

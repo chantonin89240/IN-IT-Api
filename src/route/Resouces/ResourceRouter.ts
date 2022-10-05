@@ -7,6 +7,3 @@ export const resourceRouter : Router = express.Router()
 // GET Resources
 resourceRouter.get("/:id", ResourcesService.getResource)
 resourceRouter.post("/", ResourcesService.createResource);
-
-// POST Resource
-// resourceRouter.post("/")
