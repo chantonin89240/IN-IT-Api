@@ -26,7 +26,7 @@ connexion.on('connect', function(err: any) {
 export default class ResourceService{
     static getResources(request : Request, response : Response) {
         const promise = new Promise((resolve, reject) => {
-            const request : typeof RequestTedious = new RequestTedious("exec [INITDatabase].[dbo].getResources", (err : any, rowCount : number) => {
+            const request : typeof RequestTedious = new RequestTedious("select * from dbo.getResource(-1)", (err : any, rowCount : number) => {
               if (err) {
                 console.log(err)
                 reject(err)
@@ -63,7 +63,7 @@ export default class ResourceService{
         console.log(req.body);
         
         const promise = new Promise((resolve, reject) => {
-          var requestString  = "insert into Resource (Name, Description, Picture, TypeId, MaxCapacity, Position) values ('" + req.body.name + "', '"+ req.body.description +"', '" + req.body.picture + "', " + req.body.typeId + ", " + req.body.maxCapacity +", '" + req.body.position + "');";
+          var requestString  = "EXEC dbo.createResource @name = '"+ req.body.name +"', @description = '"+ req.body.description +"', @Picture = '" + req.body.picture + "', @typeId = " + req.body.typeId + ", @maxCapacity = " + req.body.maxCapacity +", @position = '" + req.body.position + "'";
           console.log(requestString);
           const request : typeof RequestTedious = new RequestTedious(requestString, (err : any, rowCount : number) => {
             if (err) {
@@ -100,7 +100,7 @@ export default class ResourceService{
       // service de récupération d'une ressource ainsi que de sont type, options et réservation
       static getResource(request : Request, response : Response) {
         const promise = new Promise((resolve, reject) => {
-            const requestResource : typeof RequestTedious = new RequestTedious("select [Resource].Name, [Resource].Description, [Resource].Picture, [Resource].MaxCapacity, [Resource].Position, [Type].Id, [Type].Name from [Resource] inner join [Type] on [Type].Id = [Resource].TypeId where [Resource].Id = @Id", (err : any, rowCount : number) => {
+            const requestResource : typeof RequestTedious = new RequestTedious("select * from dbo.getResource(@Id)", (err : any, rowCount : number) => {
               if (err) {
                 console.log(err)
                 reject(err)
@@ -111,7 +111,7 @@ export default class ResourceService{
             let id = parseInt(request.params.id);
             requestResource.addParameter('Id', Types.Int, id);
 
-            const requestOption : typeof RequestTedious = new RequestTedious("select [Option].Id, [Option].Name, [ResourceOption].Quantity from [Option] inner join [ResourceOption] on [ResourceOption].OptionId = [Option].Id where [ResourceOption].ResourceId = @Id", (err : any, rowCount : number) => {
+            const requestOption : typeof RequestTedious = new RequestTedious("select * from dbo.getOption(@Id)", (err : any, rowCount : number) => {
               if (err) {
                 console.log(err)
                 reject(err)
@@ -121,7 +121,7 @@ export default class ResourceService{
             })
             requestOption.addParameter('Id', Types.Int, id);
 
-            const requestBooking : typeof RequestTedious = new RequestTedious("select [Booking].Id, [Booking].[Start], [Booking].[End], [Booking].Capacity from [Booking] where [Booking].ResourceId = @Id", (err : any, rowCount : number) => {
+            const requestBooking : typeof RequestTedious = new RequestTedious("select * from dbo.getBooking(@Id)", (err : any, rowCount : number) => {
               if (err) {
                 console.log(err)
                 reject(err)
