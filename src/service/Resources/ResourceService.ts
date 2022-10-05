@@ -26,7 +26,7 @@ connexion.on('connect', function(err: any) {
 export default class ResourceService{
     static getResources(request : Request, response : Response) {
         const promise = new Promise((resolve, reject) => {
-            const request : typeof RequestTedious = new RequestTedious("SELECT [Resource].Id, [Resource].Name, Description, Picture, MaxCapacity, Position, [Type].Id AS TypeId, [Type].Name AS TypeName FROM Resource INNER JOIN Type ON Type.Id = Resource.TypeId", (err : any, rowCount : number) => {
+            const request : typeof RequestTedious = new RequestTedious("exec [INITDatabase].[dbo].getResources", (err : any, rowCount : number) => {
               if (err) {
                 console.log(err)
                 reject(err)
@@ -153,25 +153,25 @@ export default class ResourceService{
               })
             })
 
-            const resources : Array<Resource> = new Array<Resource>
+            let resource: any
 
             requestResource.on("row", (columns:any) => {
-              resources.push({
-                id: id,
-                name: columns[0].value,
-                description: columns[1].value,
-                picture: columns[2].value,
-                maxCapacity: columns[3].value,
-                position: columns[4].value,
-                typeId: columns[5].value,
-                typeName: columns[6].value,
-                options: option,
-                booking: booking,
-              })
+              resource = {
+                  id: id,
+                  name: columns[0].value,
+                  description: columns[1].value,
+                  picture: columns[2].value,
+                  maxCapacity: columns[3].value,
+                  position: columns[4].value,
+                  typeId: columns[5].value,
+                  typeName: columns[6].value,
+                  options: option,
+                  booking: booking,
+              }
             })
 
             requestResource.on("requestCompleted", () => {
-              resolve(resources)
+              resolve(resource)
             })
 
             requestOption.on("requestCompleted", () => {
