@@ -11,5 +11,5 @@ export default interface Resource {
     typeId: number;
     typeName : string;
     options : Option[];
-    Booking : Booking[],
+    booking : Booking[];
 }

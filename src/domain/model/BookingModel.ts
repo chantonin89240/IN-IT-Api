@@ -6,5 +6,4 @@ export default interface Booking {
     start: Date,
     end: Date,
     capacity : number,
-    worker : Worker,
 }
