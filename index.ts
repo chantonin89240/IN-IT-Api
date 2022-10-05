@@ -8,11 +8,10 @@ import UserService from "./src/service/User/UserService"
 dotenv.config();
 
 const app: Express = express();
+app.use(express.json());
 
 const port = 3000;
 
-
-app.use(express.json())
 app.use(urlencoded({extended:true}))
 app.get("", (req: Request, res: Response) => res.send({message : "In-It API is responsive!"}))
   
@@ -22,10 +21,10 @@ app.post("/login", (req, res) => UserService.Authenticate(req, res))
 app.use((req, res, next) => UserService.Verify(req, res, next))
 
   // Data acquirement routes go here. These will be secure.
-app.use("/resources", resourceRouter);
-app.use("/types", typeRouter)
-app.use("/options", optionRouter)
-//app.get("/resource/:id", getResourceHandler)
+app.get("", (req: Request, res: Response) => res.send());
+app.use("/resource", resourceRouter);
+app.use("/type", typeRouter)
+app.use("/option", optionRouter)
 
 app.listen(port, () => {
   console.log(`⚡︝[server]: Server is running at http://localhost:${port}`);
