@@ -100,7 +100,7 @@ export default class ResourceService{
       // service de récupération d'une ressource ainsi que de sont type, options et réservation
       static getResource(request : Request, response : Response) {
         const promise = new Promise((resolve, reject) => {
-            const requestResource : typeof RequestTedious = new RequestTedious("select * from dbo.getResource(@Id)", (err : any, rowCount : number) => {
+            const requestResource : typeof RequestTedious = new RequestTedious("select Name, Description, Picture, MaxCapacity, Position, TypeId, TypeName from dbo.getResource(@Id)", (err : any, rowCount : number) => {
               if (err) {
                 console.log(err)
                 reject(err)
@@ -111,7 +111,7 @@ export default class ResourceService{
             let id = parseInt(request.params.id);
             requestResource.addParameter('Id', Types.Int, id);
 
-            const requestOption : typeof RequestTedious = new RequestTedious("select * from dbo.getOption(@Id)", (err : any, rowCount : number) => {
+            const requestOption : typeof RequestTedious = new RequestTedious("select Id, Name, Quantity from dbo.getOption(@Id)", (err : any, rowCount : number) => {
               if (err) {
                 console.log(err)
                 reject(err)
@@ -121,7 +121,7 @@ export default class ResourceService{
             })
             requestOption.addParameter('Id', Types.Int, id);
 
-            const requestBooking : typeof RequestTedious = new RequestTedious("select * from dbo.getBooking(@Id)", (err : any, rowCount : number) => {
+            const requestBooking : typeof RequestTedious = new RequestTedious("select Id, [Start], [End], Capacity from dbo.getBooking(@Id)", (err : any, rowCount : number) => {
               if (err) {
                 console.log(err)
                 reject(err)
