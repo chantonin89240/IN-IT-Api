@@ -1,6 +1,6 @@
 export default interface Booking {
   id: number;
-  userId: number;
+  userName: string;
   resourceId: number;
   start: Date;
   end: Date;

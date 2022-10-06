@@ -143,7 +143,7 @@ export default class ResourceService {
       requestOption.addParameter("Id", Types.Int, id);
 
       const requestBooking: typeof RequestTedious = new RequestTedious(
-        "select Id, userId, [Start], [End], Capacity from dbo.getBooking(@Id)",
+        "select Id, name, [Start], [End], Capacity from dbo.getBooking(@Id)",
         (err: any, rowCount: number) => {
           if (err) {
             console.log(err);
@@ -170,7 +170,7 @@ export default class ResourceService {
       requestBooking.on("row", (columns: any) => {
         booking.push({
           id: columns[0].value,
-          userId: columns[1].value,
+          userName: columns[1].value,
           resourceId: id,
           start: columns[2].value,
           end: columns[3].value,
