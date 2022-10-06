@@ -5,12 +5,12 @@ export const connection = () => {
   // connexion bdd serveur
 
   const config = {
-    server: "192.168.10.3",
+    server: "dbinitmanage.cawgyelk5tsg.us-east-1.rds.amazonaws.com",
     authentication: {
       type: "default",
       options: {
-        userName: "sa",
-        password: "Diiageg1@sql",
+        userName: "admin",
+        password: "7FspTRqyyTs7ofhjF9DJfiHz9gaiJg8qHrKcj5cx",
       },
     },
     options: {
