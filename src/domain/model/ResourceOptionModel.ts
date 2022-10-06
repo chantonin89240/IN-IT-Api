@@ -1,5 +1,5 @@
 export default interface ResourceOption {
-    resourceId : number,
-    optionId: number,
-    quantity:number
+  resourceId: number;
+  optionId: number;
+  quantity: number;
 }
