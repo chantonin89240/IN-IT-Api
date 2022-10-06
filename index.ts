@@ -14,11 +14,13 @@ app.use(express.json());
 
 const port = 3000;
 
-app.use(urlencoded({extended:true}))
-app.get("", (req: Request, res: Response) => res.send({message : "In-It API is responsive!"}))
-  
-  // Security functions. Comment and uncomment as needed for testing. 
-  // Remember to uncomment and test routes. Tokens last 12 hours.
+// Data acquirement routes go here. These will be secure.
+app.use(urlencoded({ extended: true }));
+app.get("", (req: Request, res: Response) =>
+  res.send({ message: "In-It API is responsive!" })
+);
+// Security functions. Comment and uncomment as needed for testing.
+// Remember to uncomment and test routes. Tokens last 12 hours.
   app.use("/login",securityRouter.Routes)
   app.use(securityRouter.Securize)          //This ensures token presence for routes below.
 
