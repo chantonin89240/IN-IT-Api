@@ -5,6 +5,7 @@ import { resourcesRouter } from "./src/route/Resouces/ResourcesRouter";
 import { resourceRouter } from "./src/route/Resouces/ResourceRouter";
 import { typeRouter } from "./src/route/Types/TypeRouter";
 import { optionRouter } from "./src/route/Option/OptionRouter";
+import { bookingRouter } from "./src/route/Booking/BookingRouter";
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ app.get("", (req: Request, res: Response) =>
 );
 // Security functions. Comment and uncomment as needed for testing.
 // Remember to uncomment and test routes. Tokens last 12 hours.
-app.use("/login", securityRouter.Routes);
+app.use("/login", securityRouter.userRouter);
 app.use(securityRouter.Securize); //This ensures token presence for routes below.
 
 // Data acquirement routes go here. These will be secure.
@@ -28,6 +29,7 @@ app.use("/resources", resourcesRouter);
 app.use("/types", typeRouter);
 app.use("/options", optionRouter);
 app.use("/resource", resourceRouter);
+app.use("/booking", bookingRouter);
 
 app.listen(port, () => {
   console.log(`⚡︝[server]: Server is running at http://localhost:${port}`);

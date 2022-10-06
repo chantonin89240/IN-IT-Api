@@ -36,7 +36,6 @@ export default class BookingService {
         ", @capacity = " +
         req.body.capacity +
         "'";
-      console.log(requestString);
       const request: typeof RequestTedious = new RequestTedious(
         requestString,
         (err: any, rowCount: number) => {
@@ -48,11 +47,11 @@ export default class BookingService {
           }
         }
       );
-      const resources: Array<Booking> = new Array<Booking>();
+      const booking: Array<Booking> = new Array<Booking>();
       request.on("row", (columns: any) => {
-        resources.push({
+        booking.push({
           id: columns[0].value,
-          userId: columns[1].value,
+          userName: columns[1].value,
           resourceId: columns[2].value,
           start: columns[3].value,
           end: columns[4].value,
@@ -60,9 +59,47 @@ export default class BookingService {
         });
       });
       request.on("requestCompleted", () => {
-        resolve(resources);
+        resolve(booking);
       });
       connexion.execSql(request);
+    });
+    promise.then((result) => {
+      response.status(200).send(result);
+    });
+  }
+
+  static getBookingById(request: Request, response: Response) {
+    const promise = new Promise((resolve, reject) => {
+      const requestBooking: typeof RequestTedious = new RequestTedious(
+        "select Id, Name, resourceId, Start, [End], Capacity from dbo.getBookingInDate(@Id)",
+        (err: any, rowCount: number) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            console.log(rowCount + "rows");
+          }
+        }
+      );
+      const id = parseInt(request.params.id);
+      requestBooking.addParameter("Id", Types.Int, id);
+
+      console.log("test test " + id);
+      const booking: Array<Booking> = new Array<Booking>();
+      requestBooking.on("row", (columns: any) => {
+        booking.push({
+          id: columns[0].value,
+          userName: columns[1].value,
+          resourceId: columns[2].value,
+          start: columns[3].value,
+          end: columns[4].value,
+          capacity: columns[5].value,
+        });
+      });
+      requestBooking.on("requestCompleted", () => {
+        resolve(booking);
+      });
+      connexion.execSql(requestBooking);
     });
     promise.then((result) => {
       response.status(200).send(result);

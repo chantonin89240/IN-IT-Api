@@ -2,7 +2,8 @@
 import express, { Router } from "express";
 import BookingService from "../../service/Booking/BookingService";
 
-export const resourceRouter: Router = express.Router();
+export const bookingRouter: Router = express.Router();
 
 // GET Resources
-resourceRouter.post("/", BookingService.createBooking);
+bookingRouter.get("/:id", BookingService.getBookingById);
+bookingRouter.post("/", BookingService.createBooking);
