@@ -4,7 +4,7 @@ import { connection } from "../../database/database";
 
 const connexion = connection();
 connexion.connect();
-import * as webToken from "jsonWebToken";
+import * as webToken from "jsonwebtoken";
 
 const secretKey = "f7O0x846zA47N73ph6qZ"; // Modify to be anything!
 
