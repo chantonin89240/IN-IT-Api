@@ -9,5 +9,5 @@ export default interface Resources {
   position: string;
   typeId: number;
   typeName: string;
-  booking: Booking[];
+  bookings: Booking[];
 }
