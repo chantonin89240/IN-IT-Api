@@ -1,14 +1,13 @@
 import Resources from "../../domain/model/ResourcesModel";
 import Resource from "../../domain/model/ResourceModel";
+import ResourceBooking from "../../domain/model/ResourceBookingModel";
 import Option from "../../domain/model/OptionModel";
 import Booking from "../../domain/model/BookingModel";
 import type { Response, Request } from "express";
 import { connection } from "../../database/database";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const RequestTedious = require("tedious").Request;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Types = require("tedious").TYPES;
+import { Request as RequestTedious, TYPES as Types } from "tedious";
 
 const connexion = connection();
 connexion.connect();
@@ -25,8 +24,8 @@ connexion.on("connect", function (err: any) {
 export default class ResourceService {
   static getResources(request: Request, response: Response) {
     const promise = new Promise((resolve, reject) => {
-      const request: typeof RequestTedious = new RequestTedious(
-        "select * from dbo.getResource(-1)",
+      const requestResource: RequestTedious = new RequestTedious(
+        "select Id, Name, Description, Picture, MaxCapacity, Position, TypeId, TypeName from dbo.getResource(-1)",
         (err: any, rowCount: number) => {
           if (err) {
             console.log(err);
@@ -36,8 +35,32 @@ export default class ResourceService {
           }
         }
       );
-      const resources: Array<Resources> = new Array<Resources>();
-      request.on("row", (columns: any) => {
+      const resources: Array<ResourceBooking> = new Array<ResourceBooking>();
+
+      const requestBooking: RequestTedious = new RequestTedious(
+        "select Id, name, resourceId, [Start], [End], Capacity from dbo.getBooking(-1)",
+        (err: Error, rowCount: number) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            console.log(rowCount + "rows");
+          }
+        }
+      );
+      const booking: Array<Booking> = new Array<Booking>();
+      requestBooking.on("row", (columns: Array<any>) => {
+        booking.push({
+          id: columns[0].value,
+          userName: columns[1].value,
+          resourceId: columns[2].value,
+          start: columns[3].value,
+          end: columns[4].value,
+          capacity: columns[5].value,
+        });
+      });
+
+      requestResource.on("row", (columns: Array<any>) => {
         resources.push({
           id: columns[0].value,
           name: columns[1].value,
@@ -47,12 +70,18 @@ export default class ResourceService {
           position: columns[5].value,
           typeId: columns[6].value,
           typeName: columns[7].value,
+          booking: booking.filter(
+            (book) => book.resourceId == columns[0].value
+          ),
         });
       });
-      request.on("requestCompleted", () => {
+      requestBooking.on("requestCompleted", () => {
+        connexion.execSql(requestResource);
+      });
+      requestResource.on("requestCompleted", () => {
         resolve(resources);
       });
-      connexion.execSql(request);
+      connexion.execSql(requestBooking);
     });
     promise.then((result) => {
       response.status(200).send(result);
@@ -78,7 +107,7 @@ export default class ResourceService {
         req.body.position +
         "'";
       console.log(requestString);
-      const request: typeof RequestTedious = new RequestTedious(
+      const request: RequestTedious = new RequestTedious(
         requestString,
         (err: any, rowCount: number) => {
           if (err) {
@@ -115,7 +144,7 @@ export default class ResourceService {
   // service de récupération d'une ressource ainsi que de sont type, options et réservation
   static getResource(request: Request, response: Response) {
     const promise = new Promise((resolve, reject) => {
-      const requestResource: typeof RequestTedious = new RequestTedious(
+      const requestResource: RequestTedious = new RequestTedious(
         "select Name, Description, Picture, MaxCapacity, Position, TypeId, TypeName from dbo.getResource(@Id)",
         (err: any, rowCount: number) => {
           if (err) {
@@ -129,7 +158,7 @@ export default class ResourceService {
       const id = parseInt(request.params.id);
       requestResource.addParameter("Id", Types.Int, id);
 
-      const requestOption: typeof RequestTedious = new RequestTedious(
+      const requestOption: RequestTedious = new RequestTedious(
         "select Id, Name, Quantity from dbo.getOption(@Id)",
         (err: any, rowCount: number) => {
           if (err) {
@@ -142,7 +171,7 @@ export default class ResourceService {
       );
       requestOption.addParameter("Id", Types.Int, id);
 
-      const requestBooking: typeof RequestTedious = new RequestTedious(
+      const requestBooking: RequestTedious = new RequestTedious(
         "select Id, name, [Start], [End], Capacity from dbo.getBooking(@Id)",
         (err: any, rowCount: number) => {
           if (err) {
@@ -177,8 +206,7 @@ export default class ResourceService {
           capacity: columns[4].value,
         });
       });
-
-      let resource: any;
+      let resource: Resource;
 
       requestResource.on("row", (columns: any) => {
         resource = {

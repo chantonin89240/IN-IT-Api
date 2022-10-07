@@ -25,9 +25,7 @@ export default class BookingService {
 
     const promise = new Promise((resolve, reject) => {
       const requestString =
-        "EXEC dbo.createBooking @userId = '" +
-        req.body.userId +
-        "', @resourceId = '" +
+        "EXEC dbo.createBooking @userId = 1, @resourceId = '" +
         req.body.resourceId +
         "', @start = '" +
         req.body.start +
