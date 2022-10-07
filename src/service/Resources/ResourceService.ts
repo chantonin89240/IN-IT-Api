@@ -70,7 +70,7 @@ export default class ResourceService {
           position: columns[5].value,
           typeId: columns[6].value,
           typeName: columns[7].value,
-          booking: booking.filter(
+          bookings: booking.filter(
             (book) => book.resourceId == columns[0].value
           ),
         });
