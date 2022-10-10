@@ -1,4 +1,5 @@
 import Booking from "../../domain/model/BookingModel";
+import BookingUser from "../../domain/model/BookingUserModel";
 import type { Response, Request } from "express";
 import { connection } from "../../database/database";
 
@@ -105,7 +106,7 @@ export default class BookingService {
   static getBookingByUser(request: Request, response: Response) {
     const promise = new Promise((resolve, reject) => {
       const requestBooking: typeof RequestTedious = new RequestTedious(
-        "select Id, Name, resourceId, Start, [End], Capacity from dbo.getBookingInDate(@Id)",
+        "select IdBooking, Firstname, Lastname,  [Start], [End], Capacity, IdResource, ResourceName, Description, Picture,	MaxCapacity, Position from dbo.getBookingInDate(@Id)",
         (err: any, rowCount: number) => {
           if (err) {
             console.log(err);
@@ -117,19 +118,25 @@ export default class BookingService {
       );
       const id = parseInt(request.params.id);
       requestBooking.addParameter("Id", Types.Int, id);
-      const booking: Array<Booking> = new Array<Booking>();
+      const BookingUser: Array<BookingUser> = new Array<BookingUser>();
       requestBooking.on("row", (columns: any) => {
-        booking.push({
-          id: columns[0].value,
-          userName: columns[1].value,
-          resourceId: columns[2].value,
-          start: columns[3].value,
-          end: columns[4].value,
-          capacity: columns[5].value,
+        BookingUser.push({
+          IdBooking: columns[0].value,
+          Firstname: columns[1].value,
+          Lastname: columns[2].value,
+          Start: columns[3].value,
+          End: columns[4].value,
+          Capacity: columns[5].value,
+          IdResource: columns[6].value,
+          ResourceName: columns[7].value,
+          Description: columns[8].value,
+          Picture: columns[9].value,
+          MaxCapacity: columns[10].value,
+          Position: columns[11].value,
         });
       });
       requestBooking.on("requestCompleted", () => {
-        resolve(booking);
+        resolve(BookingUser);
       });
       connexion.execSql(requestBooking);
     });
