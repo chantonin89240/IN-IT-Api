@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Request as RequestTedious } from "tedious";
-import { connection } from "../../database/database";
+import { connection } from "../../constants/database";
 
 const connexion = connection();
 connexion.connect();
@@ -76,7 +76,7 @@ export default class UserService {
         maxAge: "12h",
       }) as webToken.JwtPayload;
       if (payload != null) {
-        console.log(payload);
+        // console.log(payload);
         const claimedId: string = payload.value;
         if (CheckIsInjecting(claimedId)) {
           res.status(401).send({ message: "Please log in. (bad token)" });
@@ -84,7 +84,7 @@ export default class UserService {
         const promise = new Promise((resolve, reject) => {
           const dbRequest: string =
             "SELECT Id FROM dbo.verifUser(" + claimedId + ")";
-          console.log(dbRequest);
+          // console.log(dbRequest);
           const request: RequestTedious = new RequestTedious(
             dbRequest,
             (err: any, rowCount: number) => {

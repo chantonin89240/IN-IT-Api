@@ -1,6 +1,6 @@
 import Option from "../../domain/model/OptionModel";
 import type { Response, Request } from "express";
-import { connection } from "../../database/database";
+import { connection } from "../../constants/database";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const RequestTedious = require("tedious").Request;

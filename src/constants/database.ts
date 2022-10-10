@@ -3,7 +3,6 @@ const Connection = require("tedious").Connection;
 
 export const connection = () => {
   // connexion bdd serveur
-
   const config = {
     server: "dbinitmanage.cawgyelk5tsg.us-east-1.rds.amazonaws.com",
     authentication: {
