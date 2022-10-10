@@ -1,7 +1,8 @@
 import Booking from "../../domain/model/BookingModel";
 import BookingUser from "../../domain/model/BookingUserModel";
 import type { Response, Request } from "express";
-import { connection } from "../../database/database";
+import { connection } from "../../constants/database";
+import { getTokenContent } from "../../constants/bearer";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const RequestTedious = require("tedious").Request;
@@ -22,11 +23,12 @@ connexion.on("connect", function (err: any) {
 
 export default class BookingService {
   static createBooking(req: Request, response: Response) {
-    console.log(req.body);
-
+    const tokenContent = getTokenContent(req, response);
     const promise = new Promise((resolve, reject) => {
       const requestString =
-        "EXEC dbo.createBooking @userId = 1, @resourceId = '" +
+        "EXEC dbo.createBooking @userId = " +
+        tokenContent +
+        ", @resourceId = '" +
         req.body.resourceId +
         "', @start = '" +
         req.body.start +
@@ -104,6 +106,7 @@ export default class BookingService {
   }
 
   static getBookingByUser(request: Request, response: Response) {
+    const tokenContent = getTokenContent(request, response);
     const promise = new Promise((resolve, reject) => {
       const requestBooking: typeof RequestTedious = new RequestTedious(
         "select IdBooking, Firstname, Lastname,  [Start], [End], Capacity, IdResource, ResourceName, Description, Picture,	MaxCapacity, Position from dbo.getBookingInDate(@Id)",
@@ -116,8 +119,7 @@ export default class BookingService {
           }
         }
       );
-      const id = parseInt(request.params.id);
-      requestBooking.addParameter("Id", Types.Int, id);
+      requestBooking.addParameter("Id", Types.Int, tokenContent);
       const BookingUser: Array<BookingUser> = new Array<BookingUser>();
       requestBooking.on("row", (columns: any) => {
         BookingUser.push({

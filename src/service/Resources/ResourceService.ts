@@ -4,7 +4,7 @@ import ResourceBooking from "../../domain/model/ResourceBookingModel";
 import Option from "../../domain/model/OptionModel";
 import Booking from "../../domain/model/BookingModel";
 import type { Response, Request } from "express";
-import { connection } from "../../database/database";
+import { connection } from "../../constants/database";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { Request as RequestTedious, TYPES as Types } from "tedious";
