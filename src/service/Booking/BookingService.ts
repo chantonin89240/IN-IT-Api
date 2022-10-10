@@ -28,15 +28,15 @@ export default class BookingService {
       const requestString =
         "EXEC dbo.createBooking @userId = " +
         tokenContent +
-        ", @resourceId = '" +
+        ", @resourceId = " +
         req.body.resourceId +
-        "', @start = '" +
+        ", @start = '" +
         req.body.start +
-        "', @end = " +
+        "', @end = '" +
         req.body.end +
-        ", @capacity = " +
+        "', @capacity = " +
         req.body.capacity +
-        "'";
+        "";
       const request: typeof RequestTedious = new RequestTedious(
         requestString,
         (err: any, rowCount: number) => {
