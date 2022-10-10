@@ -1,5 +1,5 @@
 import type { Response, Request } from "express";
-import * as webToken from "jsonWebToken";
+import * as webToken from "jsonwebtoken";
 
 const secretKey = "f7O0x846zA47N73ph6qZ"; // Modify to be anything!
 
