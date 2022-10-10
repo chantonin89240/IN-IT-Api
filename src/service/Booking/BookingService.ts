@@ -69,6 +69,42 @@ export default class BookingService {
   static getBookingById(request: Request, response: Response) {
     const promise = new Promise((resolve, reject) => {
       const requestBooking: typeof RequestTedious = new RequestTedious(
+        "select Id, Name, resourceId, Start, [End], Capacity from dbo.getBooking(@Id)",
+        (err: any, rowCount: number) => {
+          if (err) {
+            console.log(err);
+            reject(err);
+          } else {
+            console.log(rowCount + "rows");
+          }
+        }
+      );
+      const id = parseInt(request.params.id);
+      requestBooking.addParameter("Id", Types.Int, id);
+      const booking: Array<Booking> = new Array<Booking>();
+      requestBooking.on("row", (columns: any) => {
+        booking.push({
+          id: columns[0].value,
+          userName: columns[1].value,
+          resourceId: columns[2].value,
+          start: columns[3].value,
+          end: columns[4].value,
+          capacity: columns[5].value,
+        });
+      });
+      requestBooking.on("requestCompleted", () => {
+        resolve(booking);
+      });
+      connexion.execSql(requestBooking);
+    });
+    promise.then((result) => {
+      response.status(200).send(result);
+    });
+  }
+
+  static getBookingByUser(request: Request, response: Response) {
+    const promise = new Promise((resolve, reject) => {
+      const requestBooking: typeof RequestTedious = new RequestTedious(
         "select Id, Name, resourceId, Start, [End], Capacity from dbo.getBookingInDate(@Id)",
         (err: any, rowCount: number) => {
           if (err) {
@@ -81,8 +117,6 @@ export default class BookingService {
       );
       const id = parseInt(request.params.id);
       requestBooking.addParameter("Id", Types.Int, id);
-
-      console.log("test test " + id);
       const booking: Array<Booking> = new Array<Booking>();
       requestBooking.on("row", (columns: any) => {
         booking.push({
